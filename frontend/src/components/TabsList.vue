@@ -2,12 +2,13 @@
 import { ref, onMounted } from "vue";
 import Sortable from "sortablejs";
 import Tab from "./Tab.vue";
+import TabContent from "./TabContent.vue";
 
 const tabsElement = ref(null);
 
 const tabs = ref([
-  { id: 0, title: "Test.vue" },
-  { id: 1, title: "Fun.vue" },
+  { id: 0, title: "Test.vue", content: "Hello from Test.vue" },
+  { id: 1, title: "Fun.vue", content: "Hello from Fun.vue" },
 ])
 const activeTab = ref(0);
 
@@ -38,4 +39,11 @@ onMounted(() => {
       <Tab :title="tab.title" :isActive="tab.id === activeTab" @mousedown="setActiveTab(tab.id)" />
     </li>
   </ul>
+  <div class="border-t overflow-scroll border-myGray bg-myDarker">
+    <div v-for="tab in tabs">
+      <div v-show="tab.id === activeTab">
+        <TabContent :content="tab.content" />
+      </div>
+    </div>
+  </div>
 </template>

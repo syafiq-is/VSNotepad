@@ -1,25 +1,19 @@
 <script setup>
-import { ref, watchEffect } from "vue";
 import MyEditor from "./MyEditor.vue"
 
-const value = ref(`let a = 2;
-let b = 3;
-
-function add(a, b) {
-  return a + b
-}
-
-console.log("a + b = ", add(a,b))
-`)
-
-watchEffect(value, () => {
-  console.log(value)
+const props = defineProps({
+  content: {
+    default: "",
+    type: String,
+    required: true
+  }
 })
+
 </script>
 
 <template>
-  <div class="p-1 overflow-auto border-t border-myGray bg-myDarker text-sm">
-    <MyEditor :content="value" />
+  <div class="p-2 text-sm">
+    <MyEditor :content="content" />
   </div>
 </template>
 

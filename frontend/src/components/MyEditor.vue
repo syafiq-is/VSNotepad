@@ -130,6 +130,4 @@ onUnmounted(() => {
 
 <template>
   <div ref="editorElement"></div>
-  <div>===================</div>
-  <pre>{{ doc }}</pre>
 </template>
