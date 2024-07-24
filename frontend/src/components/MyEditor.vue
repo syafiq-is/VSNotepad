@@ -1,9 +1,14 @@
 <script setup>
-// References: https://codesandbox.io/s/codemirror6-t9ywwc?file=/src/index.js
+/* 
+  References: 
+  > https://codesandbox.io/s/codemirror6-t9ywwc?file=/src/index.js
+  > https://codemirror.net/docs/migration/#getting-the-document-and-selection
+*/
 // Examples in /node_modules/codemirror/dist/index.js 
 import { EditorState, EditorSelection, Prec } from "@codemirror/state"
 import {
   EditorView,
+  ViewUpdate,
   keymap,
   lineNumbers,
   drawSelection,
@@ -20,7 +25,7 @@ import {
 import { vscodeKeymap } from "@replit/codemirror-vscode-keymap";
 import { highlightSelectionMatches, searchKeymap } from "@codemirror/search"
 import { closeBrackets } from "@codemirror/autocomplete";
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 import { MyEditorTheme } from "./MyEditorTheme";
 
 const props = defineProps({
@@ -32,9 +37,8 @@ const props = defineProps({
 })
 
 const editorElement = ref(null)
+const editorView = ref(null)
 const doc = ref(props.content)
-let editorView = null
-
 
 // Define the custom function to add a cursor at the mouse position
 const addCursorAtMousePosition = (view, event) => {
@@ -57,29 +61,37 @@ const addCursorAtMousePosition = (view, event) => {
 
 // Disable the default Ctrl + Left Click behavior
 const disableCtrlLeftClick = (event) => {
+  // Ctrl + Left Mouse Button
   if (event.ctrlKey && event.button === 0) {
-    // Ctrl + Left Mouse Button
     event.preventDefault();
   }
 };
 
 onMounted(() => {
-  editorView = new EditorView({
+  editorView.value = new EditorView({
     state: EditorState.create({
       doc: doc.value,
       extensions: [
         EditorState.allowMultipleSelections.of(true),
+        // Remap keybind Ctrl + Left Mouse Button to Alt + Left Mouse Button
         EditorView.domEventHandlers({
           mousedown: (event, view) => {
+            // Left Mouse Button
             if (event.altKey && event.button === 0) {
-              // Left Mouse Button
               return addCursorAtMousePosition(view, event);
             }
+            // Ctrl + Left Mouse Button
             if (event.ctrlKey && event.button === 0) {
-              // Ctrl + Left Mouse Button
               disableCtrlLeftClick(event);
             }
           },
+        }),
+        // update doc state when EditorView changed
+        EditorView.updateListener.of((v) => {
+          if (v.docChanged) {
+            doc.value = editorView.value.state.doc.toString()
+            console.log(editorView.value.state.doc.toString())
+          }
         }),
         MyEditorTheme,
         keymap.of([
@@ -106,14 +118,18 @@ onMounted(() => {
     }),
     parent: editorElement.value
   })
-
 })
+
 onUnmounted(() => {
-  editorView.destroy()
-  editorView = null
+  if (editorView.value) {
+    editorView.value.destroy()
+    editorView.value = null
+  }
 })
 </script>
 
 <template>
   <div ref="editorElement"></div>
+  <div>===================</div>
+  <pre>{{ doc }}</pre>
 </template>

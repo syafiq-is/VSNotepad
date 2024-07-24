@@ -9,12 +9,7 @@ function add(a, b) {
   return a + b
 }
 
-function multiply(a, b) {
-  return a * b
-}
-  
 console.log("a + b = ", add(a,b))
-console.log("a * b = ", multiply(a,b))
 `)
 
 watchEffect(value, () => {
