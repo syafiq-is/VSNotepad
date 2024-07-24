@@ -1,12 +1,30 @@
 <script setup>
+import { ref, watchEffect } from "vue";
+import MyEditor from "./MyEditor.vue"
 
+const value = ref(`let a = 2;
+let b = 3;
+
+function add(a, b) {
+  return a + b
+}
+
+function multiply(a, b) {
+  return a * b
+}
+  
+console.log("a + b = ", add(a,b))
+console.log("a * b = ", multiply(a,b))
+`)
+
+watchEffect(value, () => {
+  console.log(value)
+})
 </script>
 
 <template>
-  <div class="overflow-auto px-3 py-1 border-t border-myGray bg-myDarker">
-    <div class=" ">
-      <div>Test</div>
-    </div>
+  <div class="p-1 overflow-auto border-t border-myGray bg-myDarker text-sm">
+    <MyEditor :content="value" />
   </div>
 </template>
 
