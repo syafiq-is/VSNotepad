@@ -1,19 +1,29 @@
-# README
+# VSNotepad
 
-## About
+A simple notepad with Visual Studio Code keybinds to improve writing efficiency
 
-This is the official Wails Vue-TS template.
+Only available in Windows (Mac & Linux Support in the future).
 
-You can configure the project by editing `wails.json`. More information about the project settings can be found
-here: https://wails.io/docs/reference/project-config
+## Screenshot
 
-## Live Development
+## Features
 
-To run in live development mode, run `wails dev` in the project directory. This will run a Vite development
-server that will provide very fast hot reload of your frontend changes. If you want to develop in a browser
-and have access to your Go methods, there is also a dev server that runs on http://localhost:34115. Connect
-to this in your browser, and you can call your Go code from devtools.
+## Download and Installation
 
-## Building
+#### Windows
 
-To build a redistributable, production mode package, use `wails build`.
+#### macOS
+
+#### Linux
+
+## Development
+
+- add user documentation
+
+- add developer documentation
+
+## Contribution
+
+## License
+
+[**MIT**](LICENSE)
