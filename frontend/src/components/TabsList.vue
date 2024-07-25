@@ -1,10 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from "vue";
 import Sortable from "sortablejs";
 import Tab from "./Tab.vue";
 import TabContent from "./TabContent.vue";
 
-const tabsElement = ref(null);
+const tabsElement = ref<HTMLElement | null>(null);
 
 const tabs = ref([
   { id: 0, title: "Test.vue", content: "Hello from Test.vue" },
@@ -12,24 +12,28 @@ const tabs = ref([
 ])
 const activeTab = ref(0);
 
-const setActiveTab = (id) => {
+const setActiveTab = (id: number) => {
   activeTab.value = id;
 };
 
 onMounted(() => {
-  // Handle draggable tabs
-  new Sortable(tabsElement.value, {
-    animation: 150,
-  });
+  if (tabsElement.value) {
+    // Handle draggable tabs
+    new Sortable(tabsElement.value, {
+      animation: 150,
+    });
 
-  // Handle tab horizontal scroll
-  tabsElement.value.addEventListener("wheel", function (e) {
-    if (e.deltaY > 0) {
-      tabsElement.value.scrollLeft += 100;
-    } else {
-      tabsElement.value.scrollLeft -= 100;
-    }
-  });
+    // Handle tab horizontal scroll
+    tabsElement.value.addEventListener("wheel", function (e) {
+      if (tabsElement.value) {
+        if (e.deltaY > 0) {
+          tabsElement.value.scrollLeft += 100;
+        } else {
+          tabsElement.value.scrollLeft -= 100;
+        }
+      }
+    });
+  }
 });
 </script>
 

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 /* 
   References: 
   > https://codesandbox.io/s/codemirror6-t9ywwc?file=/src/index.js
@@ -40,12 +40,12 @@ const props = defineProps({
   }
 })
 
-const editorElement = ref(null)
-const editorView = ref(null)
-const doc = ref(props.content)
+const editorElement = ref<HTMLElement | null>(null)
+const editorView = ref<EditorView | null>(null)
+const doc = ref<string>(props.content)
 
 // Define the custom function to add a cursor at the mouse position
-const addCursorAtMousePosition = (view, event) => {
+function addCursorAtMousePosition(view: EditorView, event: MouseEvent) {
   const { clientX, clientY } = event;
   const pos = view.posAtCoords({ x: clientX, y: clientY });
 
@@ -64,7 +64,7 @@ const addCursorAtMousePosition = (view, event) => {
 };
 
 // Disable the default Ctrl + Left Click behavior
-const disableCtrlLeftClick = (event) => {
+function disableCtrlLeftClick(event: MouseEvent) {
   // Ctrl + Left Mouse Button
   if (event.ctrlKey && event.button === 0) {
     event.preventDefault();
@@ -92,7 +92,7 @@ onMounted(() => {
         }),
         // update doc state when EditorView changed
         EditorView.updateListener.of((v) => {
-          if (v.docChanged) {
+          if (editorView.value && v.docChanged) {
             doc.value = editorView.value.state.doc.toString()
             console.log(editorView.value.state.doc.toString())
           }
@@ -120,14 +120,14 @@ onMounted(() => {
         // }),
       ],
     }),
-    parent: editorElement.value
+    parent: <HTMLElement>editorElement.value
   })
 })
 
 onUnmounted(() => {
   if (editorView.value) {
-    editorView.value.destroy()
-    editorView.value = null
+    editorView.value.destroy();
+    editorView.value = null;
   }
 })
 </script>

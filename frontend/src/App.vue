@@ -1,5 +1,5 @@
-<script setup>
-import ReadFile from "./components/ReadFile.vue";
+<script setup lang="ts">
+// import ReadFile from "./components/ReadFile.vue";
 import TitleBar from "./components/TitleBar.vue";
 import TabsList from "./components/TabsList.vue";
 import MyFooter from "./components/Footer.vue";

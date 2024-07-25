@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { ReadFile, WriteFile, SaveAsFile } from "../../wailsjs/go/main/App";
 
@@ -43,6 +43,7 @@ textarea {
   width: 300px;
   height: 150px;
 }
+
 input {
   width: 300px;
 }

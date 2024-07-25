@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import MyEditor from "./MyEditor.vue"
 
 const props = defineProps({
@@ -8,7 +8,6 @@ const props = defineProps({
     required: true
   }
 })
-
 </script>
 
 <template>
