@@ -26,6 +26,9 @@
   }
 
   /* Scrollbar */
+  #tablist::-webkit-scrollbar {
+    height: 3px;
+  }
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;

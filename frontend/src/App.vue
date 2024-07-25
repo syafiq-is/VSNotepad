@@ -17,6 +17,6 @@ import MyFooter from "./components/Footer.vue";
 <style>
 #app-layout {
   display: grid;
-  grid-template-rows: 40px 30px 1fr 30px;
+  grid-template-rows: 40px minmax(30px, auto) 1fr 30px;
 }
 </style>
