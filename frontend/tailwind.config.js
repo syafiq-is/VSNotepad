@@ -5,6 +5,7 @@ export default {
     extend: {
       colors: {
         myBrand: "#00EDC7",
+        myBrandDark: "#00ba9c",
         myDarkest: "#181818",
         myDarker: "#1F1F1F",
         myDark: "#242424",
