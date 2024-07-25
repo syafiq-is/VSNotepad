@@ -65,8 +65,6 @@ export const MyEditorTheme = EditorView.theme(
     },
 
     ".cm-gutters": {
-      paddingLeft: "10px",
-      paddingRight: "10px",
       backgroundColor: background,
       color: gutterText,
       border: "none",
