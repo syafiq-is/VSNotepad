@@ -41,8 +41,9 @@ const props = defineProps({
 })
 
 const editorElement = ref<HTMLElement | null>(null)
-const editorView = ref<EditorView | null>(null)
 const doc = ref<string>(props.content)
+let editorState: EditorState | null;
+let editorView: EditorView | null;
 
 // Define the custom function to add a cursor at the mouse position
 function addCursorAtMousePosition(view: EditorView, event: MouseEvent) {
@@ -72,63 +73,63 @@ function disableCtrlLeftClick(event: MouseEvent) {
 };
 
 onMounted(() => {
-  editorView.value = new EditorView({
-    state: EditorState.create({
-      doc: doc.value,
-      extensions: [
-        EditorView.lineWrapping,
-        EditorState.allowMultipleSelections.of(true),
-        // Remap keybind Ctrl + Left Mouse Button to Alt + Left Mouse Button
-        EditorView.domEventHandlers({
-          mousedown: (event, view) => {
-            // Left Mouse Button
-            if (event.altKey && event.button === 0) {
-              return addCursorAtMousePosition(view, event);
-            }
-            // Ctrl + Left Mouse Button
-            if (event.ctrlKey && event.button === 0) {
-              disableCtrlLeftClick(event);
-            }
-          },
-        }),
-        // update doc state when EditorView changed
-        EditorView.updateListener.of((v) => {
-          if (editorView.value && v.docChanged) {
-            doc.value = editorView.value.state.doc.toString()
-            console.log(editorView.value.state.doc.toString())
+  editorState = EditorState.create({
+    doc: doc.value,
+    extensions: [
+      EditorView.lineWrapping,
+      EditorState.allowMultipleSelections.of(true),
+      // Remap keybind Ctrl + Left Mouse Button to Alt + Left Mouse Button
+      EditorView.domEventHandlers({
+        mousedown: (event, view) => {
+          // Left Mouse Button
+          if (event.altKey && event.button === 0) {
+            return addCursorAtMousePosition(view, event);
           }
-        }),
-        MyEditorTheme,
-        keymap.of([
-          ...vscodeKeymap,
-          ...searchKeymap,
-          indentWithTab,
-          { key: "Mod-z", run: undo, preventDefault: true },
-          { key: "Mod-Shift-z", run: redo, preventDefault: true }
-        ]),
-        closeBrackets(),
-        history(),
-        lineNumbers(),
-        highlightSelectionMatches(),
-        // highlightActiveLineGutter(),
-        // highlightActiveLine(),
-        drawSelection(),
-        // Highest priority (used to overwrite stuff)
-        // Prec.highest({
-        //   extension: [
-        //     history()
-        //   ]
-        // }),
-      ],
-    }),
+          // Ctrl + Left Mouse Button
+          if (event.ctrlKey && event.button === 0) {
+            disableCtrlLeftClick(event);
+          }
+        },
+      }),
+      // update doc state when EditorView changed
+      EditorView.updateListener.of((v) => {
+        if (editorView && v.docChanged) {
+          doc.value = editorView.state.doc.toString()
+        }
+      }),
+      MyEditorTheme,
+      keymap.of([
+        ...vscodeKeymap,
+        ...searchKeymap,
+        indentWithTab,
+        { key: "Mod-z", run: undo, preventDefault: true },
+        { key: "Mod-Shift-z", run: redo, preventDefault: true }
+      ]),
+      closeBrackets(),
+      history(),
+      lineNumbers(),
+      highlightSelectionMatches(),
+      // highlightActiveLineGutter(),
+      // highlightActiveLine(),
+      drawSelection(),
+      // Highest priority (used to overwrite stuff)
+      // Prec.highest({
+      //   extension: [
+      //     history()
+      //   ]
+      // }),
+    ],
+  })
+  editorView = new EditorView({
+    state: editorState,
     parent: <HTMLElement>editorElement.value
   })
 })
 
 onUnmounted(() => {
-  if (editorView.value) {
-    editorView.value.destroy();
-    editorView.value = null;
+  if (editorView) {
+    editorView.destroy();
+    editorView = null;
   }
 })
 </script>
