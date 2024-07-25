@@ -40,10 +40,10 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #37373d;
+    background: #555;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: #666;
   }
 }
