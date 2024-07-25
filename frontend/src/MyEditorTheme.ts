@@ -20,11 +20,9 @@ const editorText = "white",
   highlightBackground = "#2c313a",
   background = "transparent",
   tooltipBackground = "#353a42",
-  selection = "#0a4a40",
+  selection = "#0d7061",
   selectionMatch = "#0a4a40",
-  cursor = "#00EDC7",
-  activeLine = "#06302a",
-  activeLineGutter = "#06302a";
+  cursor = "#00EDC7";
 
 /// The editor theme styles for One Dark.
 export const MyEditorTheme = EditorView.theme(
@@ -38,12 +36,6 @@ export const MyEditorTheme = EditorView.theme(
     "span.cm-selectionMatch": {
       backgroundColor: selectionMatch,
     },
-    // ".cm-line.cm-activeLine": {
-    //   backgroundColor: activeLine,
-    // },
-    // ".cm-gutterElement.cm-activeLineGutter": {
-    //   backgroundColor: activeLineGutter,
-    // },
 
     ".cm-content": {
       caretColor: cursor,
@@ -73,9 +65,15 @@ export const MyEditorTheme = EditorView.theme(
     },
 
     ".cm-gutters": {
+      paddingLeft: "10px",
+      paddingRight: "10px",
       backgroundColor: background,
       color: gutterText,
       border: "none",
+    },
+
+    ".cm-gutters .cm-gutterElement": {
+      minWidth: "25px",
     },
 
     ".cm-activeLineGutter": {

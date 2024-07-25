@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 import { store } from "../store";
 import Sortable from "sortablejs";
 import Tab from "./Tab.vue";
-import TabContent from "./TabContent.vue";
+import MyEditor from "./MyEditor.vue";
 
 const tabsElement = ref<HTMLElement | null>(null);
 
@@ -40,7 +40,7 @@ onMounted(() => {
       <Tab :title="tab.title" :isActive="tab.id === activeTab" @mousedown="setActiveTab(tab.id)" />
     </li>
   </ul>
-  <div class="border-t border-myGray bg-myDarker overflow-scroll">
-    <TabContent v-for="tab in store.tabs" v-show="tab.id === activeTab" :key="tab.id" :content="tab.content" />
+  <div class="py-2 border-t border-myGray bg-myDarker text-sm overflow-auto">
+    <MyEditor v-for="tab in store.tabs" v-show="tab.id === activeTab" :key="tab.id" :content="tab.content" />
   </div>
 </template>

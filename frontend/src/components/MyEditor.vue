@@ -13,11 +13,11 @@ import {
 import {
   EditorView,
   // ViewUpdate,
-  // lineNumbers,
+  lineNumbers,
   keymap,
   drawSelection,
-  highlightActiveLine,
-  highlightActiveLineGutter,
+  // highlightActiveLine,
+  // highlightActiveLineGutter,
 } from "@codemirror/view";
 import {
   // defaultKeymap,
@@ -76,6 +76,7 @@ onMounted(() => {
     state: EditorState.create({
       doc: doc.value,
       extensions: [
+        EditorView.lineWrapping,
         EditorState.allowMultipleSelections.of(true),
         // Remap keybind Ctrl + Left Mouse Button to Alt + Left Mouse Button
         EditorView.domEventHandlers({
@@ -107,10 +108,10 @@ onMounted(() => {
         ]),
         closeBrackets(),
         history(),
-        // lineNumbers(),
+        lineNumbers(),
         highlightSelectionMatches(),
-        highlightActiveLineGutter(),
-        highlightActiveLine(),
+        // highlightActiveLineGutter(),
+        // highlightActiveLine(),
         drawSelection(),
         // Highest priority (used to overwrite stuff)
         // Prec.highest({
