@@ -1,14 +1,14 @@
 <script setup lang="ts">
 // import ReadFile from "./components/ReadFile.vue";
 import TitleBar from "./components/TitleBar.vue";
-import TabsList from "./components/TabsList.vue";
+import Content from "./components/Content.vue";
 import MyFooter from "./components/Footer.vue";
 </script>
 
 <template>
   <div id="app-layout" class="h-full">
     <TitleBar />
-    <TabsList />
+    <Content />
     <MyFooter />
   </div>
   <!-- <ReadFile /> -->
