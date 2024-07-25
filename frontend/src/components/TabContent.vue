@@ -17,22 +17,20 @@ const props = defineProps({
 </template>
 
 <style>
-/* width */
 ::-webkit-scrollbar {
   width: 10px;
+  height: 10px;
 }
 
-/* Track */
-::-webkit-scrollbar-track {
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
   background: #1F1F1F;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background: #37373D;
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }

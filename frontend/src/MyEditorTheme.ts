@@ -32,6 +32,7 @@ export const MyEditorTheme = EditorView.theme(
     "&": {
       color: editorText,
       backgroundColor: background,
+      minWidth: "fit-content",
     },
 
     "span.cm-selectionMatch": {
