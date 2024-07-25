@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onUpdated } from 'vue';
 import { store } from '../store';
 
 const props = defineProps({
@@ -16,10 +15,6 @@ const props = defineProps({
     required: true,
   },
 });
-
-onUpdated(() => {
-  console.log("has updated. ActiveTab: ", store.activeTab)
-})
 </script>
 
 <template>
