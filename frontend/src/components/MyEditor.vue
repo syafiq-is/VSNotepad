@@ -5,18 +5,22 @@
   > https://codemirror.net/docs/migration/#getting-the-document-and-selection
 */
 // Examples in /node_modules/codemirror/dist/index.js 
-import { EditorState, EditorSelection, Prec } from "@codemirror/state"
+import {
+  EditorState,
+  EditorSelection,
+  // Prec
+} from "@codemirror/state"
 import {
   EditorView,
-  ViewUpdate,
+  // ViewUpdate,
+  // lineNumbers,
   keymap,
-  lineNumbers,
   drawSelection,
   highlightActiveLine,
   highlightActiveLineGutter,
 } from "@codemirror/view";
 import {
-  defaultKeymap,
+  // defaultKeymap,
   history,
   indentWithTab,
   redo,
@@ -25,8 +29,8 @@ import {
 import { vscodeKeymap } from "@replit/codemirror-vscode-keymap";
 import { highlightSelectionMatches, searchKeymap } from "@codemirror/search"
 import { closeBrackets } from "@codemirror/autocomplete";
-import { onMounted, onUnmounted, ref, watch } from "vue";
-import { MyEditorTheme } from "./MyEditorTheme";
+import { onMounted, onUnmounted, ref } from "vue";
+import { MyEditorTheme } from "../MyEditorTheme";
 
 const props = defineProps({
   content: {

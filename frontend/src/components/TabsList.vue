@@ -35,12 +35,12 @@ onMounted(() => {
 
 <template>
   <ul ref="tabsElement" class="flex overflow-x-hidden cursor-pointer">
-    <li v-for="tab in tabs">
+    <li v-for="tab in tabs" :key="tab.id">
       <Tab :title="tab.title" :isActive="tab.id === activeTab" @mousedown="setActiveTab(tab.id)" />
     </li>
   </ul>
   <div class="border-t overflow-scroll border-myGray bg-myDarker">
-    <div v-for="tab in tabs">
+    <div v-for="tab in tabs" :key="tab.id">
       <div v-show="tab.id === activeTab">
         <TabContent :content="tab.content" />
       </div>
