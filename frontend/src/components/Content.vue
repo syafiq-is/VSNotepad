@@ -33,13 +33,13 @@ onMounted(() => {
     <ul id="tablist" data-closemenuonclick ref="tabsElement" class="flex overflow-x-auto">
       <li v-for="tab in store.tabs" :key="tab.id"
         @mousedown="($event) => { if ($event.button === 1) store.closeTab(tab.id) }">
-        <Tab :id="tab.id" :title="tab.title" :isActive="tab.id === store.activeTab"
+        <Tab :id="tab.id" :title="tab.title" :isActive="store.activeTab.id === tab.id"
           @click="store.setActiveTab(tab.id)" />
       </li>
     </ul>
     <button class="h-full px-2 text-myDarkWhite text-lg border-l border-myGray " @click="store.addEmptyTab()">+</button>
   </div>
   <div data-closemenuonclick class="py-2 border-t border-myGray bg-myDarker text-sm overflow-auto">
-    <MyEditor v-for="tab in store.tabs" v-show="tab.id === store.activeTab" :key="tab.id" :content="tab.content" />
+    <MyEditor v-for="tab in store.tabs" v-show="store.activeTab.id === tab.id" :key="tab.id" :content="tab.content" />
   </div>
 </template>

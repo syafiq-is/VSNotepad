@@ -1,32 +1,53 @@
 import { reactive } from "vue";
 
 export const store = reactive({
-  activeTab: "ID-0",
+  activeTab: {
+    id: "ID-0",
+    path: "/test/Test.vue",
+    title: "Test.vue",
+    content: "Hello from Test.vue",
+  },
   tabs: [
-    { id: "ID-0", title: "Test.vue", content: "Hello from Test.vue" },
-    { id: "ID-1", title: "Fun.vue", content: "Hello from Fun.vue" },
-    { id: "ID-2", title: "Config.vue", content: "Hello from Config.vue" },
+    {
+      id: "ID-0",
+      path: "/test/Test.vue",
+      title: "Test.vue",
+      content: "Hello from Test.vue",
+    },
+    {
+      id: "ID-1",
+      path: "/test/Fun.vue",
+      title: "Fun.vue",
+      content: "Hello from Fun.vue",
+    },
   ],
   addEmptyTab() {
-    this.tabs.push({ id: uniqueId(), title: "Untitled", content: "" });
+    this.tabs.push({
+      id: uniqueId(),
+      path: "",
+      title: "Untitled",
+      content: "",
+    });
     if (this.tabs.length === 1) {
       this.setActiveTab(this.tabs[0].id);
     }
   },
-  addTab(title: string, content: string) {
+  addTab(file: string, content: string) {
     const id = uniqueId();
-    this.tabs.push({ id: id, title: title, content: content });
+    const filename = file.split("\\").pop() as string;
+
+    this.tabs.push({ id: id, path: "", title: filename, content: content });
     this.setActiveTab(id);
   },
   closeTab(id: string) {
     this.tabs = this.tabs.filter((tab) => tab.id !== id);
     // If closed tab is current active tab, set first tab active
-    if (this.activeTab === id && this.tabs.length > 0) {
+    if (this.activeTab.id === id && this.tabs.length > 0) {
       this.setActiveTab(this.tabs[0].id);
     }
   },
   setActiveTab(id: string) {
-    store.activeTab = id;
+    this.activeTab = this.tabs.filter((tab) => tab.id === id)[0];
   },
 });
 
