@@ -13,6 +13,17 @@ type App struct {
 	ctx context.Context
 }
 
+/*
+	type File struct{
+		File string: the full filepath with filename
+		Content string: the file content
+	}
+*/
+type File struct {
+	File    string
+	Content string
+}
+
 // NewApp creates a new App application struct
 func NewApp() *App {
 	return &App{}
@@ -24,58 +35,50 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-// Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
-}
-
-func (a *App) ReadFile(filename string) string {
-	b, err := os.ReadFile(filename)
+func (a *App) OpenFile() File {
+	file, err := runtime.OpenFileDialog(a.ctx, runtime.OpenDialogOptions{
+		Title: "Open file",
+		Filters: []runtime.FileFilter{
+			{
+				DisplayName: "Text Files (*.txt;*.md)",
+				Pattern:     "*.txt;*.md",
+			},
+		},
+	})
 	if err != nil {
 		fmt.Printf("ERROR: %s", err)
 	}
 
-	str := string(b)
+	// Read the file
+	bytes, err := os.ReadFile(file)
+	if err != nil {
+		fmt.Printf("ERROR: %s", err)
+	}
 
-	return str
+	content := string(bytes)
+
+	return File{File: file, Content: content}
 }
 
-func (a *App) WriteFile(filename string, data string) string {
+// NOTE: parameter file must be in full path, filename and extension included
+func (a *App) SaveFile(file string, data string) {
 	// Convert the string data to byte slice
 	byteData := []byte(data)
 
-	// Attempt to write to the file
-	err := os.WriteFile(filename, byteData, 0644)
+	// Write to file if file exist
+	err := os.WriteFile(file, byteData, 0644)
 	if err != nil {
-		// Check if the error is because the file doesn't exist
 		if os.IsNotExist(err) {
-			return "ERROR: file doesn't exist"
+			fmt.Printf("ERROR: file doesn't exist")
 		}
-		// For other errors, return a generic error message
-		return fmt.Sprintf("ERROR: %s", err)
+
+		fmt.Printf("ERROR: %s", err)
 	}
-	return "SUCCESS: file written"
+
+	fmt.Printf("SUCCESS: file written")
 }
 
-func CreateWriteFile(filename string, data string) string {
-	file, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0644)
-	if err != nil {
-		if os.IsExist(err) {
-			return "ERROR: file already exist"
-		}
-		return fmt.Sprintf("ERROR: %s", err)
-	}
-	defer file.Close()
-
-	_, err = file.WriteString(data)
-	if err != nil {
-		return fmt.Sprintf("ERROR: %s", err)
-	}
-
-	return "SUCCESS: file created"
-}
-
-func (a *App) SaveAsFile(filename string, data string) string {
+func (a *App) SaveFileAs(filename string, data string) string {
 	filepath, err := runtime.SaveFileDialog(a.ctx, runtime.SaveDialogOptions{DefaultFilename: filename})
 	if err != nil {
 		fmt.Printf("ERROR: %s", err)

@@ -14,10 +14,13 @@ export const store = reactive({
     }
   },
   addTab(title: string, content: string) {
-    this.tabs.push({ id: uniqueId(), title: title, content: content });
+    const id = uniqueId();
+    this.tabs.push({ id: id, title: title, content: content });
+    this.setActiveTab(id);
   },
   closeTab(id: string) {
     this.tabs = this.tabs.filter((tab) => tab.id !== id);
+    // If closed tab is current active tab, set first tab active
     if (this.activeTab === id && this.tabs.length > 0) {
       this.setActiveTab(this.tabs[0].id);
     }

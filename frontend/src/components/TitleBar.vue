@@ -5,6 +5,7 @@ import {
   Quit,
 } from "../../wailsjs/runtime/runtime";
 import { onMounted, onUnmounted, ref } from 'vue';
+import { File } from "../MenuActions";
 
 const isMenuOpen = ref(false)
 const openedMenu = ref("")
@@ -16,9 +17,6 @@ function closeDropdown() {
   isMenuOpen.value = false
 }
 
-function handleClick(event: MouseEvent) {
-  console.log("Hello", event.target)
-}
 onMounted(() => {
   const closeMenuElement = document.querySelectorAll('[data-closemenuonclick]')
   closeMenuElement.forEach(ele => {
@@ -37,26 +35,26 @@ onUnmounted(() => {
   <div style="widows: 1" class="pl-3 border-b border-myGray flex justify-between bg-myDarkest">
     <div class="flex items-center">
       <img src="../assets/images/logo-universal.png" class="h-[16px]" />
-      <!-- Menu -->
+      <!-- File Menu -->
       <div class="ml-3">
-        <!-- Menu Button -->
+        <!-- File Menu Button -->
         <button class="p-2 rounded text-sm hover:bg-myDark" @mousedown="toggleMenuOpen"
           @mouseenter="openedMenu = 'File'">File</button>
-        <!-- Menu Dropdown -->
+        <!-- File Menu Dropdown -->
         <ul v-show="isMenuOpen && openedMenu === 'File'"
-          class="absolute min-w-[200px] rounded-md bg-myDark border border-myGray z-50 text-sm shadow-md">
+          class="absolute min-w-[250px] rounded-md bg-myDark border border-myGray z-50 text-sm shadow-md">
           <li class="p-1">
-            <button @mousedown="toggleMenuOpen"
+            <button @click="File.open" @mouseup="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Open</span>
               <span class="text-myDarkWhite">Ctrl+P</span>
             </button>
-            <button @mousedown="toggleMenuOpen"
+            <button @click="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Save</span>
               <span class="text-myDarkWhite">Ctrl+S</span>
             </button>
-            <button @mousedown="toggleMenuOpen"
+            <button @click="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Save As</span>
               <span class="text-myDarkWhite">Ctrl+Shift+S</span>
@@ -64,12 +62,12 @@ onUnmounted(() => {
           </li>
           <hr class="border-myGray" />
           <li class="p-1">
-            <button @mousedown="toggleMenuOpen"
+            <button @click="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Close Tab</span>
               <span class="text-myDarkWhite">Ctrl+W</span>
             </button>
-            <button @mousedown="toggleMenuOpen"
+            <button @click="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Close Window</span>
               <span class="text-myDarkWhite">Ctrl+Shift+W</span>
@@ -77,7 +75,7 @@ onUnmounted(() => {
           </li>
           <hr class="border-myGray" />
           <li class="p-1">
-            <button @mousedown="toggleMenuOpen"
+            <button @click="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Exit</span>
               <span class="text-myDarkWhite">Alt+F4</span>
@@ -85,51 +83,55 @@ onUnmounted(() => {
           </li>
         </ul>
       </div>
+      <!-- End File Menu -->
+      <!-- Edit Menu -->
       <div>
+        <!-- Edit Menu Button -->
         <button class="p-2 rounded text-sm hover:bg-myDark" @mousedown="toggleMenuOpen"
           @mouseenter="openedMenu = 'Edit'">Edit</button>
+        <!-- Edit Menu Dropdown -->
         <ul v-show="isMenuOpen && openedMenu === 'Edit'"
           class="absolute min-w-[200px] rounded-md bg-myDark border border-myGray z-50 text-sm shadow-md">
           <li class="p-1">
-            <button @mousedown="toggleMenuOpen"
+            <button @click="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Undo</span>
               <span class="text-myDarkWhite">Ctrl+Z</span>
             </button>
-            <button @mousedown="toggleMenuOpen"
+            <button @click="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Redo</span>
               <span class="text-myDarkWhite">Ctrl+Shift+Z</span>
             </button>
             <hr class="border-myGray" />
-            <button @mousedown="toggleMenuOpen"
+            <button @click="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Cut</span>
               <span class="text-myDarkWhite">Ctrl+X</span>
             </button>
-            <button @mousedown="toggleMenuOpen"
+            <button @click="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Copy</span>
               <span class="text-myDarkWhite">Ctrl+C</span>
             </button>
-            <button @mousedown="toggleMenuOpen"
+            <button @click="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Paste</span>
               <span class="text-myDarkWhite">Ctrl+V</span>
             </button>
-            <button @mousedown="toggleMenuOpen"
+            <button @click="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Delete Line</span>
               <span class="text-myDarkWhite">Ctrl+X</span>
             </button>
             <hr class="border-myGray" />
-            <button @mousedown="toggleMenuOpen"
+            <button @click="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Find</span>
               <span class="text-myDarkWhite">Ctrl+F</span>
             </button>
             <hr class="border-myGray" />
-            <button @mousedown="toggleMenuOpen"
+            <button @click="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Select All</span>
               <span class="text-myDarkWhite">Ctrl+A</span>
@@ -137,7 +139,7 @@ onUnmounted(() => {
           </li>
         </ul>
       </div>
-      <!-- End Menu -->
+      <!-- End Edit Menu -->
     </div>
 
     <div class="flex items-center select-none">
