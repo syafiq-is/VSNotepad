@@ -31,7 +31,8 @@ onMounted(() => {
 <template>
   <div class="grid grid-cols-[1fr_40px]">
     <ul id="tablist" data-closemenuonclick ref="tabsElement" class="flex overflow-x-auto">
-      <li v-for="tab in store.tabs" :key="tab.id">
+      <li v-for="tab in store.tabs" :key="tab.id"
+        @mousedown="($event) => { if ($event.button === 1) store.closeTab(tab.id) }">
         <Tab :id="tab.id" :title="tab.title" :isActive="tab.id === store.activeTab"
           @click="store.setActiveTab(tab.id)" />
       </li>
