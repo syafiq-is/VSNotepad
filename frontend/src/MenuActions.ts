@@ -1,5 +1,5 @@
-import { store } from "./store";
-import { OpenFile } from "../wailsjs/go/main/App";
+import { contentStore, store } from "./store";
+import { OpenFile, SaveFile } from "../wailsjs/go/main/App";
 
 type OpenFileResult = {
   Content: string;
@@ -12,10 +12,30 @@ const File = {
       const res = result as OpenFileResult;
       // Check if a file has selected
       if (res.File !== "") {
-        const filename = res.File.split("\\").pop() as string;
-        store.addTab(filename, res.Content);
+        store.addTab(res.File, res.Content);
+
+        console.log("SUCCESS: File opened");
+      } else {
+        console.log("ERROR: No file selected");
       }
     });
+  },
+  save: function (): void {
+    // Check if tab is an actual file not untitled file
+    if (store.activeTab.path === "") return;
+    // Get tab unsaved content
+    const newContentTab = contentStore.tabs.find(
+      (tab) => tab.id === store.activeTab.id
+    );
+    if (newContentTab) {
+      SaveFile(store.activeTab.path, newContentTab.content)
+        .then(() => {
+          console.log("SUCCESS: File saved");
+        })
+        .catch(() => {
+          console.log("ERROR: File not saved");
+        });
+    }
   },
 };
 

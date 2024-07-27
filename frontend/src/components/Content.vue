@@ -40,6 +40,7 @@ onMounted(() => {
     <button class="h-full px-2 text-myDarkWhite text-lg border-l border-myGray " @click="store.addEmptyTab()">+</button>
   </div>
   <div data-closemenuonclick class="py-2 border-t border-myGray bg-myDarker text-sm overflow-auto">
-    <MyEditor v-for="tab in store.tabs" v-show="store.activeTab.id === tab.id" :key="tab.id" :content="tab.content" />
+    <MyEditor v-for="tab in store.tabs" v-show="store.activeTab.id === tab.id" :key="tab.id" :id="tab.id"
+      :content="tab.content" />
   </div>
 </template>

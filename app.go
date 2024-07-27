@@ -47,12 +47,14 @@ func (a *App) OpenFile() File {
 	})
 	if err != nil {
 		fmt.Printf("ERROR: %s", err)
+		return File{File: "", Content: ""}
 	}
 
 	// Read the file
 	bytes, err := os.ReadFile(file)
 	if err != nil {
 		fmt.Printf("ERROR: %s", err)
+		return File{File: "", Content: ""}
 	}
 
 	content := string(bytes)
@@ -70,15 +72,17 @@ func (a *App) SaveFile(file string, data string) {
 	if err != nil {
 		if os.IsNotExist(err) {
 			fmt.Printf("ERROR: file doesn't exist")
+			return
 		}
 
 		fmt.Printf("ERROR: %s", err)
+		return
 	}
 
 	fmt.Printf("SUCCESS: file written")
 }
 
-func (a *App) SaveFileAs(filename string, data string) string {
+func (a *App) SaveFileAs(filename string, data string) {
 	filepath, err := runtime.SaveFileDialog(a.ctx, runtime.SaveDialogOptions{DefaultFilename: filename})
 	if err != nil {
 		fmt.Printf("ERROR: %s", err)
@@ -86,14 +90,14 @@ func (a *App) SaveFileAs(filename string, data string) string {
 
 	file, err := os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
-		return fmt.Sprintf("ERROR: %s", err)
+		fmt.Printf("ERROR: %s", err)
 	}
 	defer file.Close()
 
 	_, err = file.WriteString(data)
 	if err != nil {
-		return fmt.Sprintf("ERROR: %s", err)
+		fmt.Printf("ERROR: %s", err)
 	}
 
-	return "SUCCESS: file created and written"
+	fmt.Printf("SUCCESS: file created and written")
 }

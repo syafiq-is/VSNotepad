@@ -49,7 +49,7 @@ onUnmounted(() => {
               <span>Open</span>
               <span class="text-myDarkWhite">Ctrl+P</span>
             </button>
-            <button @click="closeDropdown"
+            <button @click="File.save" @mouseup="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Save</span>
               <span class="text-myDarkWhite">Ctrl+S</span>

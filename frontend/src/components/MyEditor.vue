@@ -31,17 +31,21 @@ import { highlightSelectionMatches, searchKeymap } from "@codemirror/search"
 import { closeBrackets } from "@codemirror/autocomplete";
 import { onMounted, onUnmounted, ref } from "vue";
 import { MyEditorTheme } from "../MyEditorTheme";
+import { contentStore } from "../store";
+import { debounce } from "../helpers";
 
 const props = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
   content: {
-    default: "",
     type: String,
     required: true,
   }
 })
 
 const editorElement = ref<HTMLElement | null>(null)
-const doc = ref<string>(props.content)
 let editorState: EditorState | null;
 let editorView: EditorView | null;
 
@@ -72,9 +76,15 @@ function disableCtrlLeftClick(event: MouseEvent) {
   }
 };
 
+const debouncedContentStoreUpdater = debounce(() => {
+  if (editorView) {
+    contentStore.updateTabContent(props.id, editorView.state.doc.toString())
+  }
+}, 500)
+
 onMounted(() => {
   editorState = EditorState.create({
-    doc: doc.value,
+    doc: props.content,
     extensions: [
       EditorView.lineWrapping,
       EditorState.allowMultipleSelections.of(true),
@@ -94,7 +104,7 @@ onMounted(() => {
       // update doc state when EditorView changed
       EditorView.updateListener.of((v) => {
         if (editorView && v.docChanged) {
-          doc.value = editorView.state.doc.toString()
+          debouncedContentStoreUpdater()
         }
       }),
       MyEditorTheme,
