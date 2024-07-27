@@ -1,5 +1,5 @@
 import { contentStore, store } from "./store";
-import { OpenFile, SaveFile } from "../wailsjs/go/main/App";
+import { OpenFile, SaveFile, SaveFileAs } from "../wailsjs/go/main/App";
 
 type OpenFileResult = {
   Content: string;
@@ -23,11 +23,12 @@ const File = {
   save: function (): void {
     // Check if tab is an actual file not untitled file
     if (store.activeTab.path === "") return;
-    // Get tab unsaved content
+    // Get unsaved content tab
     const newContentTab = contentStore.tabs.find(
       (tab) => tab.id === store.activeTab.id
     );
     if (newContentTab) {
+      // Save current activeTab unsaved content
       SaveFile(store.activeTab.path, newContentTab.content)
         .then(() => {
           console.log("SUCCESS: File saved");
@@ -37,18 +38,21 @@ const File = {
         });
     }
   },
+  saveAs: function (): void {
+    // Get unsaved content tab
+    const newContentTab = contentStore.tabs.find(
+      (tab) => tab.id === store.activeTab.id
+    );
+    if (newContentTab) {
+      SaveFileAs(store.activeTab.title, newContentTab.content)
+        .then(() => {
+          console.log("SUCCESS: File saved");
+        })
+        .catch(() => {
+          console.log("ERROR: File not saved");
+        });
+    }
+  },
 };
-
-// function writeFile() {
-//   WriteFile(fileName.value, fileContent.value).then((result) => {
-//     console.log(result);
-//   });
-// }
-
-// function saveAsFile() {
-//   SaveAsFile(fileName.value, fileContent.value).then((result) => {
-//     console.log(result);
-//   });
-// }
 
 export { File };

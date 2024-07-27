@@ -54,7 +54,7 @@ onUnmounted(() => {
               <span>Save</span>
               <span class="text-myDarkWhite">Ctrl+S</span>
             </button>
-            <button @click="closeDropdown"
+            <button @click="File.saveAs" @mouseup="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Save As</span>
               <span class="text-myDarkWhite">Ctrl+Shift+S</span>
