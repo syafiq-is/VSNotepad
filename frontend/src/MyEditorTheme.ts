@@ -27,10 +27,11 @@ const editorText = "white",
 /// The editor theme styles for One Dark.
 export const MyEditorTheme = EditorView.theme(
   {
+    // & is the .ͼo style
     "&": {
       color: editorText,
       backgroundColor: background,
-      minWidth: "fit-content",
+      height: "100%",
     },
 
     "span.cm-selectionMatch": {

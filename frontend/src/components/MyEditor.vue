@@ -145,5 +145,5 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="editorElement"></div>
+  <div ref="editorElement" class="h-full"></div>
 </template>
