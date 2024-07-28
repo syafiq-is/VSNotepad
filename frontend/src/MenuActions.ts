@@ -1,10 +1,18 @@
 import { contentStore, store } from "./store";
 import { OpenFile, SaveFile, SaveFileAs } from "../wailsjs/go/main/App";
+import { assignKeybind, Keybind } from "./helpers";
 
 type OpenFileResult = {
   Content: string;
   File: string;
 };
+// Menu keybinds
+const keybinds: Keybind[] = [
+  { key: "ctrl+o", func: () => File.open() },
+  { key: "ctrl+s", func: () => File.save() },
+  { key: "ctrl+shift+s", func: () => File.saveAs() },
+];
+document.onkeydown = assignKeybind(keybinds);
 
 const File = {
   open: function (): void {
