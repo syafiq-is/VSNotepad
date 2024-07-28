@@ -94,6 +94,7 @@ export const store = reactive({
     if (this.activeTab.id === id && this.tabs.length > 0) {
       this.setActiveTab(this.tabs[0].id);
     }
+    contentStore.closeTabContent(id);
   },
   setActiveTab(id: string) {
     this.activeTab = this.tabs.find((tab) => tab.id === id) as Tab;
