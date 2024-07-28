@@ -39,6 +39,9 @@ export const contentStore = {
       }
     }
   },
+  closeTabContent(id: string) {
+    this.tabs = this.tabs.filter((tab) => tab.id !== id);
+  },
 };
 
 // This variable store the tabs reactive data that needs re-render of the componenents
@@ -75,6 +78,7 @@ export const store = reactive({
     if (this.tabs.length === 1) {
       this.setActiveTab(this.tabs[0].id);
     }
+    this.setActiveTab(id);
   },
   addTab(file: string, content: string) {
     const id = uniqueId();
