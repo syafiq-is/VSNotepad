@@ -23,11 +23,9 @@ import {
   // defaultKeymap,
   history,
   indentWithTab,
-  redo,
-  undo,
 } from "@codemirror/commands";
 import { vscodeKeymap } from "@replit/codemirror-vscode-keymap";
-import { highlightSelectionMatches, searchKeymap } from "@codemirror/search"
+import { highlightSelectionMatches, selectNextOccurrence } from "@codemirror/search"
 import { closeBrackets } from "@codemirror/autocomplete";
 import { onMounted, onUnmounted, ref } from "vue";
 import { MyEditorTheme } from "../MyEditorTheme";
@@ -110,10 +108,8 @@ onMounted(() => {
       MyEditorTheme,
       keymap.of([
         ...vscodeKeymap,
-        ...searchKeymap,
         indentWithTab,
-        { key: "Mod-z", run: undo, preventDefault: true },
-        { key: "Mod-Shift-z", run: redo, preventDefault: true }
+        { key: "Mod-d", run: selectNextOccurrence, preventDefault: true }
       ]),
       closeBrackets(),
       history(),

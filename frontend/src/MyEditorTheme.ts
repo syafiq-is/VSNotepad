@@ -37,6 +37,10 @@ export const MyEditorTheme = EditorView.theme(
     "span.cm-selectionMatch": {
       backgroundColor: selectionMatch,
     },
+    " span.cm-searchMatch": {
+      backgroundColor: selectionMatch,
+      outline: `1px solid ${selection}`,
+    },
 
     ".cm-content": {
       caretColor: cursor,
