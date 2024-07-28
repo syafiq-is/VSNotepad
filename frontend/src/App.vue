@@ -11,7 +11,6 @@ import MyFooter from "./components/Footer.vue";
     <Content />
     <MyFooter />
   </div>
-  <!-- <ReadFile /> -->
 </template>
 
 <style>
