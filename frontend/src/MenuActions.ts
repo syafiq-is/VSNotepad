@@ -11,31 +11,30 @@ const File = {
     OpenFile().then((result) => {
       const res = result as OpenFileResult;
       // Check if a file has selected
-      if (res.File !== "") {
+      if (res.File && res.File !== "") {
         store.addTab(res.File, res.Content);
 
         console.log("SUCCESS: File opened");
       } else {
-        console.log("ERROR: No file selected");
+        console.log(result);
       }
     });
   },
   save: function (): void {
     // Check if tab is an actual file not untitled file
-    if (store.activeTab.path === "") return;
+    if (store.activeTab.path === "") {
+      this.saveAs();
+      return;
+    }
     // Get unsaved content tab
     const newContentTab = contentStore.tabs.find(
       (tab) => tab.id === store.activeTab.id
     );
     if (newContentTab) {
       // Save current activeTab unsaved content
-      SaveFile(store.activeTab.path, newContentTab.content)
-        .then(() => {
-          console.log("SUCCESS: File saved");
-        })
-        .catch(() => {
-          console.log("ERROR: File not saved");
-        });
+      SaveFile(store.activeTab.path, newContentTab.content).then((result) => {
+        console.log(result);
+      });
     }
   },
   saveAs: function (): void {
@@ -44,13 +43,11 @@ const File = {
       (tab) => tab.id === store.activeTab.id
     );
     if (newContentTab) {
-      SaveFileAs(store.activeTab.title, newContentTab.content)
-        .then(() => {
-          console.log("SUCCESS: File saved");
-        })
-        .catch(() => {
-          console.log("ERROR: File not saved");
-        });
+      SaveFileAs(store.activeTab.title, newContentTab.content).then(
+        (result) => {
+          console.log(result);
+        }
+      );
     }
   },
 };

@@ -45,22 +45,22 @@ export const contentStore = {
 export const store = reactive({
   activeTab: {
     id: "ID-0",
-    path: "/test/Test.vue",
-    title: "Test.vue",
-    content: "Hello from Test.vue",
+    path: "",
+    title: "Test.txt",
+    content: "Hello from Test.txt",
   },
   tabs: [
     {
       id: "ID-0",
-      path: "/test/Test.vue",
-      title: "Test.vue",
-      content: "Hello from Test.vue",
+      path: "",
+      title: "Test.txt",
+      content: "Hello from Test.txt",
     },
     {
       id: "ID-1",
-      path: "/test/Fun.vue",
-      title: "Fun.vue",
-      content: "Hello from Fun.vue",
+      path: "/test/Fun.txt",
+      title: "Fun.txt",
+      content: "Hello from Fun.txt",
     },
   ],
   addEmptyTab() {

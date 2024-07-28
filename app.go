@@ -35,7 +35,8 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-func (a *App) OpenFile() File {
+// returns (File | string)
+func (a *App) OpenFile() any {
 	file, err := runtime.OpenFileDialog(a.ctx, runtime.OpenDialogOptions{
 		Title: "Open file",
 		Filters: []runtime.FileFilter{
@@ -46,15 +47,13 @@ func (a *App) OpenFile() File {
 		},
 	})
 	if err != nil {
-		fmt.Printf("ERROR: %s", err)
-		return File{File: "", Content: ""}
+		return fmt.Sprintf("ERROR: %s", err)
 	}
 
 	// Read the file
 	bytes, err := os.ReadFile(file)
 	if err != nil {
-		fmt.Printf("ERROR: %s", err)
-		return File{File: "", Content: ""}
+		return fmt.Sprintf("ERROR: %s", err)
 	}
 
 	content := string(bytes)
@@ -63,7 +62,7 @@ func (a *App) OpenFile() File {
 }
 
 // NOTE: parameter file must be in full path, filename and extension included
-func (a *App) SaveFile(file string, data string) {
+func (a *App) SaveFile(file string, data string) string {
 	// Convert the string data to byte slice
 	byteData := []byte(data)
 
@@ -71,33 +70,31 @@ func (a *App) SaveFile(file string, data string) {
 	err := os.WriteFile(file, byteData, 0644)
 	if err != nil {
 		if os.IsNotExist(err) {
-			fmt.Printf("ERROR: file doesn't exist")
-			return
+			return "ERROR: file doesn't exist"
 		}
 
-		fmt.Printf("ERROR: %s", err)
-		return
+		return fmt.Sprintf("ERROR: %s", err)
 	}
 
-	fmt.Printf("SUCCESS: file written")
+	return "SUCCESS: file written"
 }
 
-func (a *App) SaveFileAs(filename string, data string) {
+func (a *App) SaveFileAs(filename string, data string) string {
 	filepath, err := runtime.SaveFileDialog(a.ctx, runtime.SaveDialogOptions{DefaultFilename: filename})
 	if err != nil {
-		fmt.Printf("ERROR: %s", err)
+		return fmt.Sprintf("ERROR: %s", err)
 	}
 
 	file, err := os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
-		fmt.Printf("ERROR: %s", err)
+		return fmt.Sprintf("ERROR: %s", err)
 	}
 	defer file.Close()
 
 	_, err = file.WriteString(data)
 	if err != nil {
-		fmt.Printf("ERROR: %s", err)
+		return fmt.Sprintf("ERROR: %s", err)
 	}
 
-	fmt.Printf("SUCCESS: file created and written")
+	return "SUCCESS: file created and written"
 }
