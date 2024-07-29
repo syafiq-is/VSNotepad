@@ -15,6 +15,7 @@ function sendMessages() {
   })
 }
 
+const isBurgerOpen = ref(false)
 const isMenuOpen = ref(false)
 const openedMenu = ref("")
 
@@ -23,8 +24,10 @@ function toggleMenuOpen() {
 }
 function closeDropdown() {
   isMenuOpen.value = false
+  isBurgerOpen.value = false
 }
 
+// Close menu dropdown when clicking outside menu & title bar
 onMounted(() => {
   const closeMenuElement = document.querySelectorAll('[data-closemenuonclick]')
   closeMenuElement.forEach(ele => {
@@ -42,120 +45,134 @@ onUnmounted(() => {
 <template>
   <div style="widows: 1" class="pl-3 border-b border-myGray flex justify-between bg-myDarkest">
     <div class="flex items-center">
-      <img src="../assets/images/logo-universal.png" class="h-[16px]" />
-      <!-- File Menu -->
-      <div style="widows: 2" class="ml-3">
-        <!-- File Menu Button -->
-        <button class="p-2 rounded text-sm hover:bg-myDark" @mousedown="toggleMenuOpen"
-          @mouseenter="openedMenu = 'File'">File</button>
-        <!-- File Menu Dropdown -->
-        <ul v-show="isMenuOpen && openedMenu === 'File'"
-          class="absolute min-w-[250px] rounded-md bg-myDark border border-myGray z-50 text-sm shadow-md">
-          <li class="p-1">
-            <button @click="store.addEmptyTab" @mouseup="closeDropdown"
-              class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
-              <span>New Tab</span>
-              <span class="text-myDarkWhite">Ctrl+T</span>
+      <img src="../assets/images/logo-universal.png" class="h-[16px] mr-3" />
+      <div style="widows: 2" class="relative flex items-center">
+        <button class="p-1 hover:bg-myGray rounded" @mousedown="isBurgerOpen = !isBurgerOpen">
+          <svg xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 -960 960 960" width="22px" fill="#e8eaed">
+            <path d="M160-269.23v-40h640v40H160ZM160-460v-40h640v40H160Zm0-190.77v-40h640v40H160Z" />
+          </svg>
+        </button>
+        <ul v-show="isBurgerOpen"
+          class="absolute top-full left-0 min-w-[160px] rounded-md bg-myDark border border-myGray z-50 text-sm shadow-md">
+          <!-- File Menu -->
+          <li class="p-1 relative">
+            <button class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark"
+              @mousedown="toggleMenuOpen" @mouseenter="openedMenu = 'File'">
+              <span>File</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                class="h-[15px] w-[15px] text-white">
+                <path d="M9.6 8.30775L5 3.70775L5.70775 3L11.0155 8.30775L5.70775 13.6155L5 12.9078L9.6 8.30775Z"
+                  fill="#E8EAED" />
+              </svg>
             </button>
+            <ul v-show="isMenuOpen && openedMenu === 'File'"
+              class="absolute top-0 left-full min-w-[250px] rounded-md bg-myDark border border-myGray z-50 text-sm shadow-md">
+              <li class="p-1">
+                <button @click="store.addEmptyTab" @mouseup="closeDropdown"
+                  class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
+                  <span>New Tab</span>
+                  <span class="text-myDarkWhite">Ctrl+T</span>
+                </button>
+              </li>
+              <hr class="border-myGray" />
+              <li class="p-1">
+                <button @click="File.open" @mouseup="closeDropdown"
+                  class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
+                  <span>Open</span>
+                  <span class="text-myDarkWhite">Ctrl+P</span>
+                </button>
+                <button @click="File.save" @mouseup="closeDropdown"
+                  class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
+                  <span>Save</span>
+                  <span class="text-myDarkWhite">Ctrl+S</span>
+                </button>
+                <button @click="File.saveAs" @mouseup="closeDropdown"
+                  class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
+                  <span>Save As</span>
+                  <span class="text-myDarkWhite">Ctrl+Shift+S</span>
+                </button>
+              </li>
+              <hr class="border-myGray" />
+              <li class="p-1">
+                <button @click="store.closeTab(store.activeTab.id)" @mouseup="closeDropdown"
+                  class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
+                  <span>Close Tab</span>
+                  <span class="text-myDarkWhite">Ctrl+W</span>
+                </button>
+                <button @click="Quit()" @mouseup="closeDropdown"
+                  class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
+                  <span>Close Window</span>
+                  <span class="text-myDarkWhite">Ctrl+Shift+W</span>
+                </button>
+              </li>
+              <hr class="border-myGray" />
+              <li class="p-1">
+                <button @click="Quit()" @mouseup="closeDropdown"
+                  class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
+                  <span>Exit</span>
+                  <span class="text-myDarkWhite">Alt+F4</span>
+                </button>
+              </li>
+            </ul>
           </li>
-          <hr class="border-myGray" />
-          <li class="p-1">
-            <button @click="File.open" @mouseup="closeDropdown"
-              class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
-              <span>Open</span>
-              <span class="text-myDarkWhite">Ctrl+P</span>
+          <!-- End File Menu -->
+          <!-- Edit Menu -->
+          <li class="p-1 relative">
+            <button class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark"
+              @mousedown="toggleMenuOpen" @mouseenter="openedMenu = 'Edit'">
+              <span>Edit</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                class="h-[15px] w-[15px] text-white">
+                <path d="M9.6 8.30775L5 3.70775L5.70775 3L11.0155 8.30775L5.70775 13.6155L5 12.9078L9.6 8.30775Z"
+                  fill="#E8EAED" />
+              </svg>
             </button>
-            <button @click="File.save" @mouseup="closeDropdown"
-              class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
-              <span>Save</span>
-              <span class="text-myDarkWhite">Ctrl+S</span>
-            </button>
-            <button @click="File.saveAs" @mouseup="closeDropdown"
-              class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
-              <span>Save As</span>
-              <span class="text-myDarkWhite">Ctrl+Shift+S</span>
-            </button>
+
+            <ul v-show="isMenuOpen && openedMenu === 'Edit'"
+              class="absolute top-0 left-full min-w-[200px] rounded-md bg-myDark border border-myGray z-50 text-sm shadow-md">
+              <li class="p-1">
+                <button @mouseup="closeDropdown"
+                  class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
+                  <span>Undo</span>
+                  <span class="text-myDarkWhite">Ctrl+Z</span>
+                </button>
+                <button @mouseup="closeDropdown"
+                  class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
+                  <span>Redo</span>
+                  <span class="text-myDarkWhite">Ctrl+Shift+Z</span>
+                </button>
+              </li>
+              <hr class="border-myGray" />
+              <li class="p-1">
+                <button @mouseup="closeDropdown"
+                  class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
+                  <span>Cut</span>
+                  <span class="text-myDarkWhite">Ctrl+X</span>
+                </button>
+                <button @mouseup="closeDropdown"
+                  class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
+                  <span>Copy</span>
+                  <span class="text-myDarkWhite">Ctrl+C</span>
+                </button>
+                <button @mouseup="closeDropdown"
+                  class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
+                  <span>Paste</span>
+                  <span class="text-myDarkWhite">Ctrl+V</span>
+                </button>
+              </li>
+              <hr class="border-myGray" />
+              <li class="p-1">
+                <button @mouseup="closeDropdown"
+                  class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
+                  <span>Find</span>
+                  <span class="text-myDarkWhite">Ctrl+F</span>
+                </button>
+              </li>
+            </ul>
           </li>
-          <hr class="border-myGray" />
-          <li class="p-1">
-            <button @click="store.closeTab(store.activeTab.id)" @mouseup="closeDropdown"
-              class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
-              <span>Close Tab</span>
-              <span class="text-myDarkWhite">Ctrl+W</span>
-            </button>
-            <button @click="Quit()" @mouseup="closeDropdown"
-              class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
-              <span>Close Window</span>
-              <span class="text-myDarkWhite">Ctrl+Shift+W</span>
-            </button>
-          </li>
-          <hr class="border-myGray" />
-          <li class="p-1">
-            <button @click="Quit()" @mouseup="closeDropdown"
-              class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
-              <span>Exit</span>
-              <span class="text-myDarkWhite">Alt+F4</span>
-            </button>
-          </li>
+          <!-- End Edit Menu -->
         </ul>
       </div>
-      <!-- End File Menu -->
-      <!-- Edit Menu -->
-      <div style="widows: 2">
-        <!-- Edit Menu Button -->
-        <button class="p-2 rounded text-sm hover:bg-myDark" @mousedown="toggleMenuOpen"
-          @mouseenter="openedMenu = 'Edit'">Edit</button>
-        <!-- Edit Menu Dropdown -->
-        <ul v-show="isMenuOpen && openedMenu === 'Edit'"
-          class="absolute min-w-[200px] rounded-md bg-myDark border border-myGray z-50 text-sm shadow-md">
-          <li class="p-1">
-            <button @mouseup="closeDropdown"
-              class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
-              <span>Undo</span>
-              <span class="text-myDarkWhite">Ctrl+Z</span>
-            </button>
-            <button @mouseup="closeDropdown"
-              class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
-              <span>Redo</span>
-              <span class="text-myDarkWhite">Ctrl+Shift+Z</span>
-            </button>
-            <hr class="border-myGray" />
-            <button @mouseup="closeDropdown"
-              class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
-              <span>Cut</span>
-              <span class="text-myDarkWhite">Ctrl+X</span>
-            </button>
-            <button @mouseup="closeDropdown"
-              class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
-              <span>Copy</span>
-              <span class="text-myDarkWhite">Ctrl+C</span>
-            </button>
-            <button @mouseup="closeDropdown"
-              class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
-              <span>Paste</span>
-              <span class="text-myDarkWhite">Ctrl+V</span>
-            </button>
-            <button @mouseup="closeDropdown"
-              class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
-              <span>Delete Line</span>
-              <span class="text-myDarkWhite">Ctrl+X</span>
-            </button>
-            <hr class="border-myGray" />
-            <button @mouseup="closeDropdown"
-              class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
-              <span>Find</span>
-              <span class="text-myDarkWhite">Ctrl+F</span>
-            </button>
-            <hr class="border-myGray" />
-            <button @mouseup="closeDropdown"
-              class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
-              <span>Select All</span>
-              <span class="text-myDarkWhite">Ctrl+A</span>
-            </button>
-          </li>
-        </ul>
-      </div>
-      <!-- End Edit Menu -->
     </div>
 
     <div class="flex items-center select-none">
