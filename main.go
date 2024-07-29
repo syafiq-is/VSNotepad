@@ -23,11 +23,11 @@ func main() {
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		Frameless: true,
+		Frameless:        true,
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
 		OnStartup:        app.startup,
-		CSSDragProperty: "widows",
-		CSSDragValue:    "1",
+		CSSDragProperty:  "widows",
+		CSSDragValue:     "1",
 		Bind: []interface{}{
 			app,
 		},

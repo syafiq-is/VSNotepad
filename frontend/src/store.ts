@@ -22,6 +22,11 @@ export const contentStore = {
       content: "Hello from Fun.vue",
     },
   ],
+  getTab(id: string) {
+    return this.tabs.find((tab) => {
+      tab.id === id;
+    });
+  },
   addTabContent(id: string, content: string) {
     this.tabs.push({
       id: id,
@@ -75,7 +80,7 @@ export const store = reactive({
     },
     {
       id: "ID-1",
-      path: "/test/Fun.txt",
+      path: "",
       title: "Fun.txt",
       content: "Hello from Fun.txt",
       isSaved: true,

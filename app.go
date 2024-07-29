@@ -24,6 +24,11 @@ type File struct {
 	Content string
 }
 
+type Result struct {
+	IsError bool
+	Result  any
+}
+
 // NewApp creates a new App application struct
 func NewApp() *App {
 	return &App{}
@@ -36,7 +41,7 @@ func (a *App) startup(ctx context.Context) {
 }
 
 // returns (File | string)
-func (a *App) OpenFile() any {
+func (a *App) OpenFile() Result {
 	file, err := runtime.OpenFileDialog(a.ctx, runtime.OpenDialogOptions{
 		Title: "Open file",
 		Filters: []runtime.FileFilter{
@@ -47,22 +52,22 @@ func (a *App) OpenFile() any {
 		},
 	})
 	if err != nil {
-		return fmt.Sprintf("ERROR: %s", err)
+		return Result{IsError: true, Result: fmt.Sprintf("ERROR: %s", err)}
 	}
 
 	// Read the file
 	bytes, err := os.ReadFile(file)
 	if err != nil {
-		return fmt.Sprintf("ERROR: %s", err)
+		return Result{IsError: true, Result: fmt.Sprintf("ERROR: %s", err)}
 	}
 
 	content := string(bytes)
 
-	return File{File: file, Content: content}
+	return Result{IsError: false, Result: File{File: file, Content: content}}
 }
 
 // NOTE: parameter file must be in full path, filename and extension included
-func (a *App) SaveFile(file string, data string) string {
+func (a *App) SaveFile(file string, data string) Result {
 	// Convert the string data to byte slice
 	byteData := []byte(data)
 
@@ -70,31 +75,46 @@ func (a *App) SaveFile(file string, data string) string {
 	err := os.WriteFile(file, byteData, 0644)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return "ERROR: file doesn't exist"
+			return Result{IsError: true, Result: "File doesn't exist"}
 		}
 
-		return fmt.Sprintf("ERROR: %s", err)
+		return Result{IsError: true, Result: fmt.Sprintf("ERROR: %s", err)}
 	}
 
-	return "SUCCESS: file written"
+	return Result{IsError: false, Result: "File saved"}
 }
 
-func (a *App) SaveFileAs(filename string, data string) string {
+func (a *App) SaveFileAs(filename string, data string) Result {
 	filepath, err := runtime.SaveFileDialog(a.ctx, runtime.SaveDialogOptions{DefaultFilename: filename})
 	if err != nil {
-		return fmt.Sprintf("ERROR: %s", err)
+		return Result{IsError: true, Result: fmt.Sprintf("ERROR: %s", err)}
 	}
 
 	file, err := os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
-		return fmt.Sprintf("ERROR: %s", err)
+		return Result{IsError: true, Result: fmt.Sprintf("ERROR: %s", err)}
 	}
 	defer file.Close()
 
 	_, err = file.WriteString(data)
 	if err != nil {
-		return fmt.Sprintf("ERROR: %s", err)
+		return Result{IsError: true, Result: fmt.Sprintf("ERROR: %s", err)}
 	}
 
-	return "SUCCESS: file created and written"
+	return Result{IsError: false, Result: filepath}
+}
+
+func (a *App) WarningMessage(title string, message string) Result {
+	selection, err := runtime.MessageDialog(a.ctx, runtime.MessageDialogOptions{
+		Type:          runtime.WarningDialog,
+		Title:         title,
+		Message:       message,
+		DefaultButton: "Ok",
+		CancelButton:  "Cancel",
+	})
+	if err != nil {
+		return Result{IsError: true, Result: fmt.Sprintf("ERROR: %s", err)}
+	}
+
+	return Result{IsError: false, Result: selection}
 }

@@ -6,6 +6,14 @@ import {
 } from "../../wailsjs/runtime/runtime";
 import { onMounted, onUnmounted, ref } from 'vue';
 import { File } from "../MenuActions";
+import { WarningMessage } from "../../wailsjs/go/main/App";
+import { store } from "../store";
+
+function sendMessages() {
+  WarningMessage("VSNotepad", "Do you want to save the changed ").then(result => {
+    console.log(result)
+  })
+}
 
 const isMenuOpen = ref(false)
 const openedMenu = ref("")
@@ -36,13 +44,21 @@ onUnmounted(() => {
     <div class="flex items-center">
       <img src="../assets/images/logo-universal.png" class="h-[16px]" />
       <!-- File Menu -->
-      <div class="ml-3">
+      <div style="widows: 2" class="ml-3">
         <!-- File Menu Button -->
         <button class="p-2 rounded text-sm hover:bg-myDark" @mousedown="toggleMenuOpen"
           @mouseenter="openedMenu = 'File'">File</button>
         <!-- File Menu Dropdown -->
         <ul v-show="isMenuOpen && openedMenu === 'File'"
           class="absolute min-w-[250px] rounded-md bg-myDark border border-myGray z-50 text-sm shadow-md">
+          <li class="p-1">
+            <button @click="store.addEmptyTab" @mouseup="closeDropdown"
+              class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
+              <span>New Tab</span>
+              <span class="text-myDarkWhite">Ctrl+T</span>
+            </button>
+          </li>
+          <hr class="border-myGray" />
           <li class="p-1">
             <button @click="File.open" @mouseup="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
@@ -62,12 +78,12 @@ onUnmounted(() => {
           </li>
           <hr class="border-myGray" />
           <li class="p-1">
-            <button @click="closeDropdown"
+            <button @click="store.closeTab(store.activeTab.id)" @mouseup="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Close Tab</span>
               <span class="text-myDarkWhite">Ctrl+W</span>
             </button>
-            <button @click="closeDropdown"
+            <button @click="Quit()" @mouseup="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Close Window</span>
               <span class="text-myDarkWhite">Ctrl+Shift+W</span>
@@ -75,7 +91,7 @@ onUnmounted(() => {
           </li>
           <hr class="border-myGray" />
           <li class="p-1">
-            <button @click="closeDropdown"
+            <button @click="Quit()" @mouseup="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Exit</span>
               <span class="text-myDarkWhite">Alt+F4</span>
@@ -85,7 +101,7 @@ onUnmounted(() => {
       </div>
       <!-- End File Menu -->
       <!-- Edit Menu -->
-      <div>
+      <div style="widows: 2">
         <!-- Edit Menu Button -->
         <button class="p-2 rounded text-sm hover:bg-myDark" @mousedown="toggleMenuOpen"
           @mouseenter="openedMenu = 'Edit'">Edit</button>
@@ -93,45 +109,45 @@ onUnmounted(() => {
         <ul v-show="isMenuOpen && openedMenu === 'Edit'"
           class="absolute min-w-[200px] rounded-md bg-myDark border border-myGray z-50 text-sm shadow-md">
           <li class="p-1">
-            <button @click="closeDropdown"
+            <button @mouseup="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Undo</span>
               <span class="text-myDarkWhite">Ctrl+Z</span>
             </button>
-            <button @click="closeDropdown"
+            <button @mouseup="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Redo</span>
               <span class="text-myDarkWhite">Ctrl+Shift+Z</span>
             </button>
             <hr class="border-myGray" />
-            <button @click="closeDropdown"
+            <button @mouseup="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Cut</span>
               <span class="text-myDarkWhite">Ctrl+X</span>
             </button>
-            <button @click="closeDropdown"
+            <button @mouseup="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Copy</span>
               <span class="text-myDarkWhite">Ctrl+C</span>
             </button>
-            <button @click="closeDropdown"
+            <button @mouseup="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Paste</span>
               <span class="text-myDarkWhite">Ctrl+V</span>
             </button>
-            <button @click="closeDropdown"
+            <button @mouseup="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Delete Line</span>
               <span class="text-myDarkWhite">Ctrl+X</span>
             </button>
             <hr class="border-myGray" />
-            <button @click="closeDropdown"
+            <button @mouseup="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Find</span>
               <span class="text-myDarkWhite">Ctrl+F</span>
             </button>
             <hr class="border-myGray" />
-            <button @click="closeDropdown"
+            <button @mouseup="closeDropdown"
               class="w-full rounded flex justify-between py-[6px] px-3 hover:bg-myBrandDark">
               <span>Select All</span>
               <span class="text-myDarkWhite">Ctrl+A</span>
@@ -146,7 +162,7 @@ onUnmounted(() => {
       <span class="ml-1 text-sm">VSNotepad</span>
     </div>
 
-    <div class="flex">
+    <div style="widows: 2" class="flex">
       <button class="w-[45px] flex items-center justify-center cursor-default hover:bg-myDark" @click="WindowMinimise">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#e8eaed" class="w-[18px]">
           <path d="M240-460v-40h480v40H240Z" />

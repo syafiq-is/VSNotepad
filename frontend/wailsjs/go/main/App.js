@@ -13,3 +13,7 @@ export function SaveFile(arg1, arg2) {
 export function SaveFileAs(arg1, arg2) {
   return window['go']['main']['App']['SaveFileAs'](arg1, arg2);
 }
+
+export function WarningMessage(arg1, arg2) {
+  return window['go']['main']['App']['WarningMessage'](arg1, arg2);
+}
