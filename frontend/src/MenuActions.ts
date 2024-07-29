@@ -29,7 +29,7 @@ const File = {
     });
   },
   save: function (): void {
-    // Check if tab is an actual file not untitled file
+    // If current tab is untitled save file as new file
     if (store.activeTab.path === "") {
       this.saveAs();
       return;
