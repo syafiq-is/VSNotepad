@@ -8,6 +8,11 @@ type Tab = {
   content: string;
   isSaved: boolean;
 };
+interface Store {
+  activeTab: Tab;
+  tabs: Tab[];
+  [key: string]: any; // This allows for any other properties
+}
 
 // This variable store openend file new content for file Save write purpose.
 // contentStore separated from store to prevent over rendering when editor content changes
@@ -62,7 +67,7 @@ export const contentStore = {
 };
 
 // This variable store the tabs reactive data that needs re-render of the componenents
-export const store = reactive({
+export const store = reactive<Store>({
   activeTab: {
     id: "",
     path: "",
@@ -71,20 +76,20 @@ export const store = reactive({
     isSaved: true,
   },
   tabs: [
-    {
-      id: "ID-0",
-      path: "",
-      title: "Test.txt",
-      content: "Hello from Test.txt",
-      isSaved: true,
-    },
-    {
-      id: "ID-1",
-      path: "",
-      title: "Fun.txt",
-      content: "Hello from Fun.txt",
-      isSaved: true,
-    },
+    // {
+    //   id: "ID-0",
+    //   path: "",
+    //   title: "Test.txt",
+    //   content: "Hello from Test.txt",
+    //   isSaved: true,
+    // },
+    // {
+    //   id: "ID-1",
+    //   path: "",
+    //   title: "Fun.txt",
+    //   content: "Hello from Fun.txt",
+    //   isSaved: true,
+    // },
   ],
   addEmptyTab() {
     const id = uniqueId();
@@ -128,4 +133,7 @@ export const store = reactive({
   },
 });
 
+if (store.tabs.length < 1) {
+  store.addEmptyTab();
+}
 store.setActiveTab(store.tabs[0].id);
