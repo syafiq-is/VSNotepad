@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import { uniqueId, debounce } from "./helpers";
+import { uniqueId } from "./helpers";
 import { EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 

@@ -72,13 +72,11 @@ function disableCtrlLeftClick(event: MouseEvent) {
   }
 };
 
-// TODO: Adding debounce (increase in complexity, so i removed it)
-const debouncedContentStoreUpdater = () => {
+const debouncedFunc = debounce(() => {
   if (editorStore.editorView) {
-    // console.log("Changed detected")
-    contentStore.updateTabContent(props.id, editorStore.editorView.state.doc.toString())
+    // console.log("Debounced changed detected")
   }
-}
+}, 200)
 
 onMounted(() => {
   editorStore.editorState = EditorState.create({
@@ -102,7 +100,10 @@ onMounted(() => {
       // update doc state when EditorView changed
       EditorView.updateListener.of((v) => {
         if (editorStore.editorView && v.docChanged) {
-          debouncedContentStoreUpdater()
+          // console.log("Changed detected")
+          contentStore.updateTabContent(props.id, editorStore.editorView.state.doc.toString())
+
+          debouncedFunc()
         }
       }),
       MyEditorTheme,
