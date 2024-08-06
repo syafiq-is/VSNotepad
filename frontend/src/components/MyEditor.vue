@@ -29,7 +29,7 @@ import { highlightSelectionMatches, selectNextOccurrence } from "@codemirror/sea
 import { closeBrackets } from "@codemirror/autocomplete";
 import { onMounted, onUnmounted, ref } from "vue";
 import { MyEditorTheme } from "../MyEditorTheme";
-import { contentStore } from "../store";
+import { contentStore, editorStore } from "../store";
 import { debounce } from "../helpers";
 
 const props = defineProps({
@@ -44,8 +44,6 @@ const props = defineProps({
 })
 
 const editorElement = ref<HTMLElement | null>(null)
-let editorState: EditorState | null;
-let editorView: EditorView | null;
 
 // Define the custom function to add a cursor at the mouse position
 function addCursorAtMousePosition(view: EditorView, event: MouseEvent) {
@@ -76,14 +74,14 @@ function disableCtrlLeftClick(event: MouseEvent) {
 
 // TODO: Adding debounce (increase in complexity, so i removed it)
 const debouncedContentStoreUpdater = () => {
-  if (editorView) {
+  if (editorStore.editorView) {
     // console.log("Changed detected")
-    contentStore.updateTabContent(props.id, editorView.state.doc.toString())
+    contentStore.updateTabContent(props.id, editorStore.editorView.state.doc.toString())
   }
 }
 
 onMounted(() => {
-  editorState = EditorState.create({
+  editorStore.editorState = EditorState.create({
     doc: props.content,
     extensions: [
       EditorView.lineWrapping,
@@ -103,7 +101,7 @@ onMounted(() => {
       }),
       // update doc state when EditorView changed
       EditorView.updateListener.of((v) => {
-        if (editorView && v.docChanged) {
+        if (editorStore.editorView && v.docChanged) {
           debouncedContentStoreUpdater()
         }
       }),
@@ -128,16 +126,16 @@ onMounted(() => {
       // }),
     ],
   })
-  editorView = new EditorView({
-    state: editorState,
-    parent: <HTMLElement>editorElement.value
+  editorStore.editorView = new EditorView({
+    state: editorStore.editorState as EditorState,
+    parent: editorElement.value as HTMLElement
   })
 })
 
 onUnmounted(() => {
-  if (editorView) {
-    editorView.destroy();
-    editorView = null;
+  if (editorStore.editorView) {
+    editorStore.editorView.destroy();
+    editorStore.editorView = null;
   }
 })
 </script>

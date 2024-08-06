@@ -7,7 +7,9 @@ import {
 import { onMounted, onUnmounted, ref } from 'vue';
 import { File } from "../MenuActions";
 import { WarningMessage } from "../../wailsjs/go/main/App";
-import { store } from "../store";
+import { editorStore, store } from "../store";
+import { undo, redo, } from "@codemirror/commands";
+import { EditorState, StateCommand } from "@codemirror/state";
 
 function sendMessages() {
   WarningMessage("VSNotepad", "Do you want to save the changed ").then(result => {
@@ -25,6 +27,15 @@ function toggleMenuOpen() {
 function closeDropdown() {
   isMenuOpen.value = false
   isBurgerOpen.value = false
+}
+
+function execCommand(command: StateCommand) {
+  if (editorStore.editorView) {
+    command({
+      state: editorStore.editorView.state as EditorState,
+      dispatch: editorStore.editorView.dispatch,
+    });
+  }
 }
 
 // Close menu dropdown when clicking outside menu & title bar
@@ -131,12 +142,12 @@ onUnmounted(() => {
             <ul v-show="isMenuOpen && openedMenu === 'Edit'"
               class="absolute top-0 left-full min-w-[200px] rounded-md bg-myDark border border-myGray z-50 text-sm shadow-md">
               <li class="p-1">
-                <button @mouseup="closeDropdown"
+                <button @mouseup="closeDropdown" @click="execCommand(undo)"
                   class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
                   <span>Undo</span>
                   <span class="text-myDarkWhite">Ctrl+Z</span>
                 </button>
-                <button @mouseup="closeDropdown"
+                <button @mouseup="closeDropdown" @click="execCommand(redo)"
                   class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
                   <span>Redo</span>
                   <span class="text-myDarkWhite">Ctrl+Shift+Z</span>
@@ -144,17 +155,17 @@ onUnmounted(() => {
               </li>
               <hr class="border-myGray" />
               <li class="p-1">
-                <button @mouseup="closeDropdown"
+                <button @mouseup="closeDropdown" @click=""
                   class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
                   <span>Cut</span>
                   <span class="text-myDarkWhite">Ctrl+X</span>
                 </button>
-                <button @mouseup="closeDropdown"
+                <button @mouseup="closeDropdown" @click=""
                   class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
                   <span>Copy</span>
                   <span class="text-myDarkWhite">Ctrl+C</span>
                 </button>
-                <button @mouseup="closeDropdown"
+                <button @mouseup="closeDropdown" @click=""
                   class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
                   <span>Paste</span>
                   <span class="text-myDarkWhite">Ctrl+V</span>
@@ -162,7 +173,7 @@ onUnmounted(() => {
               </li>
               <hr class="border-myGray" />
               <li class="p-1">
-                <button @mouseup="closeDropdown"
+                <button @mouseup="closeDropdown" @click=""
                   class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
                   <span>Find</span>
                   <span class="text-myDarkWhite">Ctrl+F</span>

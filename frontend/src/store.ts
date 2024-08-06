@@ -1,5 +1,7 @@
 import { reactive } from "vue";
 import { uniqueId, debounce } from "./helpers";
+import { EditorState } from "@codemirror/state";
+import { EditorView } from "@codemirror/view";
 
 type Tab = {
   id: string;
@@ -8,11 +10,23 @@ type Tab = {
   content: string;
   isSaved: boolean;
 };
-interface Store {
+type Store = {
   activeTab: Tab;
   tabs: Tab[];
   [key: string]: any; // This allows for any other properties
-}
+};
+type EditorStore = {
+  editorState: EditorState | null;
+  editorView: EditorView | null;
+};
+
+// WARN: Do not make this reactive. it will ruin external Codemirror commands call
+// Uncaught RangeError: Trying to update state with a transaction that doesn't start from the previous state.
+// References: https://discuss.codemirror.net/t/how-to-undo-on-button-press/3034/5
+export const editorStore: EditorStore = {
+  editorState: null,
+  editorView: null,
+};
 
 // This variable store openend file new content for file Save write purpose.
 // contentStore separated from store to prevent over rendering when editor content changes
@@ -133,6 +147,7 @@ export const store = reactive<Store>({
   },
 });
 
+// Open new tab on Startup
 if (store.tabs.length < 1) {
   store.addEmptyTab();
 }
