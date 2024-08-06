@@ -50,8 +50,6 @@ function handleCut() {
       return
     }
 
-    console.log('Selection length:', length);
-
     const selectedText = editorStore.editorView.state.sliceDoc(
       editorStore.editorView.state.selection.main.from,
       editorStore.editorView.state.selection.main.to
