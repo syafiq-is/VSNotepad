@@ -8,8 +8,10 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import { File } from "../MenuActions";
 import { WarningMessage } from "../../wailsjs/go/main/App";
 import { editorStore, store } from "../store";
-import { undo, redo, } from "@codemirror/commands";
+import { undo, redo, deleteLine } from "@codemirror/commands";
 import { EditorState, StateCommand } from "@codemirror/state";
+import { openSearchPanel } from "@codemirror/search";
+import { EditorView } from "codemirror";
 
 function sendMessages() {
   WarningMessage("VSNotepad", "Do you want to save the changed ").then(result => {
@@ -34,6 +36,55 @@ function execCommand(command: StateCommand) {
     command({
       state: editorStore.editorView.state as EditorState,
       dispatch: editorStore.editorView.dispatch,
+    });
+  }
+}
+
+function handleCut() {
+  if (editorStore.editorView) {
+    const selection = editorStore.editorView.state.selection.main;
+    const length = selection.to - selection.from;
+    // Delete Line if no text selected
+    if (length === 0) {
+      deleteLine(editorStore.editorView)
+      return
+    }
+
+    console.log('Selection length:', length);
+
+    const selectedText = editorStore.editorView.state.sliceDoc(
+      editorStore.editorView.state.selection.main.from,
+      editorStore.editorView.state.selection.main.to
+    );
+    navigator.clipboard.writeText(selectedText).then(() => {
+      if (editorStore.editorView) {
+        editorStore.editorView.dispatch({
+          changes: {
+            from: editorStore.editorView.state.selection.main.from,
+            to: editorStore.editorView.state.selection.main.to,
+            insert: ""
+          }
+        });
+      }
+    });
+  }
+}
+
+function handleCopy() {
+  if (editorStore.editorView) {
+    const selectedText = editorStore.editorView.state.sliceDoc(
+      editorStore.editorView.state.selection.main.from,
+      editorStore.editorView.state.selection.main.to
+    );
+    navigator.clipboard.writeText(selectedText);
+  }
+}
+
+async function handlePaste() {
+  if (editorStore.editorView) {
+    const text = await navigator.clipboard.readText();
+    editorStore.editorView.dispatch({
+      changes: { from: editorStore.editorView.state.selection.main.from, insert: text }
     });
   }
 }
@@ -155,17 +206,17 @@ onUnmounted(() => {
               </li>
               <hr class="border-myGray" />
               <li class="p-1">
-                <button @mouseup="closeDropdown" @click=""
+                <button @mouseup="closeDropdown" @click="handleCut()"
                   class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
                   <span>Cut</span>
                   <span class="text-myDarkWhite">Ctrl+X</span>
                 </button>
-                <button @mouseup="closeDropdown" @click=""
+                <button @mouseup="closeDropdown" @click="handleCopy()"
                   class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
                   <span>Copy</span>
                   <span class="text-myDarkWhite">Ctrl+C</span>
                 </button>
-                <button @mouseup="closeDropdown" @click=""
+                <button @mouseup="closeDropdown" @click="handlePaste()"
                   class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
                   <span>Paste</span>
                   <span class="text-myDarkWhite">Ctrl+V</span>
@@ -173,7 +224,7 @@ onUnmounted(() => {
               </li>
               <hr class="border-myGray" />
               <li class="p-1">
-                <button @mouseup="closeDropdown" @click=""
+                <button @mouseup="closeDropdown" @click="openSearchPanel(editorStore.editorView as EditorView)"
                   class="w-full rounded flex justify-between py-[4px] px-3 hover:bg-myBrandDark">
                   <span>Find</span>
                   <span class="text-myDarkWhite">Ctrl+F</span>
